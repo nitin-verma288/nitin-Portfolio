@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Send, Copy, Check, ArrowUpRight, MessageSquare } from 'lucide-react';
+import { Mail, Phone, Send, Copy, Check, ArrowUpRight, MessageSquare, Loader2, AlertCircle } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import { GithubIcon, LinkedinIcon } from './Icons';
 
 const Contact = () => {
   const [copied, setCopied] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const emailAddress = "nitinverma288nv@gmail.com";
   const phoneNumber = "+91 88391 44372";
@@ -16,13 +19,48 @@ const Contact = () => {
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
+    setErrorMessage('');
+    setLoading(true);
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      setLoading(false);
+      setErrorMessage('Failed to send message. Please try again.');
+      console.error('EmailJS Error: Missing VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, or VITE_EMAILJS_PUBLIC_KEY in environment variables.');
+      return;
+    }
+
+    const templateParams = {
+      name: formData.name,
+      from_name: formData.name,
+      user_name: formData.name,
+      email: formData.email,
+      from_email: formData.email,
+      user_email: formData.email,
+      reply_to: formData.email,
+      message: formData.message,
+      subject: 'Portfolio Contact Message',
+      to_email: emailAddress
+    };
+
+    try {
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      setSuccessMessage(true);
       setFormData({ name: '', email: '', message: '' });
-    }, 4000);
+      setTimeout(() => {
+        setSuccessMessage(false);
+      }, 6000);
+    } catch (error) {
+      console.error('EmailJS Send Error:', error);
+      setErrorMessage('Failed to send message. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -138,14 +176,28 @@ const Contact = () => {
                   Fill out the form below and I'll respond directly via email.
                 </p>
 
-                {formSubmitted ? (
+                {successMessage ? (
                   <div className="p-6 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-center space-y-2">
                     <Check size={32} className="mx-auto text-emerald-400" />
                     <div className="font-bold text-base">Message Sent Successfully!</div>
-                    <p className="text-xs text-emerald-400/80">Thank you for reaching out. I will get back to you shortly.</p>
+                    <p className="text-xs text-emerald-400/80">Thank you for reaching out. I have received your email and will get back to you shortly.</p>
+                    <button
+                      type="button"
+                      onClick={() => setSuccessMessage(false)}
+                      className="mt-3 inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-emerald-300 bg-emerald-900/40 hover:bg-emerald-900/60 rounded-lg border border-emerald-500/30 transition-colors"
+                    >
+                      Send Another Message
+                    </button>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    {errorMessage && (
+                      <div className="p-3 rounded-lg bg-rose-950/50 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+                        <AlertCircle size={16} className="text-rose-400 shrink-0" />
+                        <span>{errorMessage}</span>
+                      </div>
+                    )}
+
                     <div>
                       <label className="block text-xs font-mono text-slate-400 uppercase mb-1.5">
                         Your Name
@@ -153,10 +205,11 @@ const Contact = () => {
                       <input
                         type="text"
                         required
+                        disabled={loading}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Your Name / Company"
-                        className="w-full px-4 py-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+                        className="w-full px-4 py-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50"
                       />
                     </div>
 
@@ -167,10 +220,11 @@ const Contact = () => {
                       <input
                         type="email"
                         required
+                        disabled={loading}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="recruiter@company.com"
-                        className="w-full px-4 py-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+                        className="w-full px-4 py-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-50"
                       />
                     </div>
 
@@ -181,19 +235,30 @@ const Contact = () => {
                       <textarea
                         rows={4}
                         required
+                        disabled={loading}
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         placeholder="Hi Nitin, I would like to discuss a Java Backend developer opportunity with you..."
-                        className="w-full px-4 py-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                        className="w-full px-4 py-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors resize-none disabled:opacity-50"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all shadow-md shadow-blue-600/30 border border-blue-400/30"
+                      disabled={loading}
+                      className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed rounded-xl transition-all shadow-md shadow-blue-600/30 border border-blue-400/30 cursor-pointer"
                     >
-                      <Send size={16} />
-                      <span>Send Message</span>
+                      {loading ? (
+                        <>
+                          <Loader2 size={16} className="animate-spin" />
+                          <span>Sending Message...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send size={16} />
+                          <span>Send Message</span>
+                        </>
+                      )}
                     </button>
                   </form>
                 )}

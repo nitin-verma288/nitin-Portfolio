@@ -29,31 +29,31 @@ const Navbar = () => {
   ];
 
   const scrollToSection = (sectionId) => {
-    // 1. Close mobile menu immediately
+    // 1. Close mobile menu before scrolling
     setMobileMenuOpen(false);
 
-    // 2. Smoothly scroll to section
-    if (sectionId === 'home') {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-      if (window.history.pushState) {
-        window.history.pushState(null, '', '#home');
+    // 2. Short delay so the mobile drawer animation does not interfere with layout calculation
+    setTimeout(() => {
+      if (sectionId === 'home') {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        return;
       }
-      return;
-    }
 
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-      if (window.history.pushState) {
-        window.history.pushState(null, '', `#${sectionId}`);
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const navbarHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = Math.max(0, elementPosition - navbarHeight);
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
       }
-    }
+    }, 250);
   };
 
   return (

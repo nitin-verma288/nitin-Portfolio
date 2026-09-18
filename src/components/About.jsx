@@ -28,7 +28,7 @@ const About = () => {
         {/* Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center text-left">
           
-          {/* Left Education Card */}
+          {/* Left Column: Profile Photo & Education Card */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -36,6 +36,23 @@ const About = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-5 space-y-6"
           >
+            {/* Personal Photo Card */}
+            <div className="glass-card rounded-2xl p-3 sm:p-4 border border-slate-800/90 hover:border-blue-500/40 transition-all shadow-xl overflow-hidden">
+              <div className="relative rounded-xl overflow-hidden bg-slate-950 border border-slate-800/80">
+                <img
+                  src="/images/profile.jpg"
+                  alt="Nitin Verma"
+                  onError={(e) => {
+                    if (!e.currentTarget.src.endsWith('profile.png')) {
+                      e.currentTarget.src = '/images/profile.png';
+                    }
+                  }}
+                  className="w-full h-auto max-h-[420px] object-cover object-top rounded-xl"
+                />
+              </div>
+            </div>
+
+            {/* Education Card */}
             <div className="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800/90 hover:border-blue-500/40 transition-all shadow-xl space-y-6">
               
               <div className="flex items-center gap-4 border-b border-slate-800 pb-5">
