@@ -4,7 +4,7 @@ import { GraduationCap, Award, CheckCircle2, UserCheck, Terminal } from 'lucide-
 
 const About = () => {
   return (
-    <section id="about" className="py-24 relative overflow-hidden">
+    <section id="about" className="scroll-mt-24 py-24 relative overflow-hidden">
       {/* Background ambient glow */}
       <div className="absolute top-1/3 left-10 w-96 h-96 bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 

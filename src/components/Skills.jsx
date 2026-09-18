@@ -27,7 +27,7 @@ const Skills = () => {
   ];
 
   return (
-    <section id="skills" className="py-24 relative overflow-hidden bg-[#040711]/60 border-y border-slate-800/80">
+    <section id="skills" className="scroll-mt-24 py-24 relative overflow-hidden bg-[#040711]/60 border-y border-slate-800/80">
       {/* Glow effect */}
       <div className="absolute top-1/2 right-1/4 w-80 h-80 bg-blue-600/10 rounded-full blur-[130px] pointer-events-none -z-10" />
 

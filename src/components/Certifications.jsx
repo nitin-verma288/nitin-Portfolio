@@ -43,7 +43,7 @@ const Certifications = () => {
   ];
 
   return (
-    <section id="certifications" className="py-24 relative overflow-hidden bg-[#030611]/80 border-t border-slate-800/80">
+    <section id="certifications" className="scroll-mt-24 py-24 relative overflow-hidden bg-[#030611]/80 border-t border-slate-800/80">
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/3 w-80 h-80 bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 

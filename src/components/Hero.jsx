@@ -5,7 +5,7 @@ import { GithubIcon, LinkedinIcon } from './Icons';
 
 const Hero = () => {
   return (
-    <section id="home" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
+    <section id="home" className="scroll-mt-24 relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
       {/* Background ambient radial glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-[120px] pointer-events-none -z-10" />
       <div className="absolute top-1/3 right-10 w-[300px] h-[300px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none -z-10" />
