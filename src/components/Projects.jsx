@@ -21,7 +21,7 @@ const Projects = () => {
       description: 'A full-stack offline AI assistant designed to run with a local AI model (Gemma 3 via Ollama) and a Spring Boot backend.',
       technologies: ['Java', 'Spring Boot', 'SQLite', 'Ollama', 'Gemma 3', 'Tailwind CSS', 'React'],
       githubUrl: 'https://github.com/nitin-verma288',
-      liveUrl: 'https://github.com/nitin-verma288',
+      liveUrl: 'https://nova-ai-ten-xi.vercel.app',
       image: activeImageMap['nova-ai'],
       mainImage: '/images/nova-ai-main.png',
       gallery: [
@@ -56,7 +56,7 @@ const Projects = () => {
       description: 'A real-time queue handling and booking management system built with a Spring Boot REST API backend and MySQL database.',
       technologies: ['Spring Boot', 'Java', 'React.js', 'Tailwind CSS', 'MySQL'],
       githubUrl: 'https://github.com/nitin-verma288',
-      liveUrl: 'https://github.com/nitin-verma288',
+      liveUrl: 'https://smart-queue-management-systemm.vercel.app',
       image: activeImageMap['smart-queue'],
       mainImage: '/images/smart-queue-main.png',
       gallery: [

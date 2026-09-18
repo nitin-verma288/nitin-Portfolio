@@ -28,6 +28,37 @@ const Navbar = () => {
     { name: 'Contact', href: '#contact' },
   ];
 
+  const handleNavClick = (e, href) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+
+    if (href === '#home') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      if (window.history.pushState) {
+        window.history.pushState(null, '', '#home');
+      }
+      return;
+    }
+
+    const targetElement = document.querySelector(href);
+    if (targetElement) {
+      const navbarHeight = 70;
+      const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = Math.max(0, elementPosition - navbarHeight);
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      if (window.history.pushState) {
+        window.history.pushState(null, '', href);
+      }
+    }
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -40,6 +71,7 @@ const Navbar = () => {
         {/* Monogram / Brand */}
         <a
           href="#home"
+          onClick={(e) => handleNavClick(e, '#home')}
           className="flex items-center gap-2 group focus:outline-none"
         >
           <div className="w-9 h-9 rounded-lg bg-blue-600/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-mono font-bold group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(0,102,255,0.5)]">
@@ -56,6 +88,7 @@ const Navbar = () => {
             <a
               key={link.name}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
               className="px-3.5 py-1.5 text-sm font-medium text-slate-300 hover:text-blue-400 transition-colors rounded-full hover:bg-slate-800/50"
             >
               {link.name}
@@ -86,6 +119,7 @@ const Navbar = () => {
 
           <a
             href="#contact"
+            onClick={(e) => handleNavClick(e, '#contact')}
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-all duration-200 shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-0.5 border border-blue-400/30"
           >
             <span>Let's Connect</span>
@@ -96,7 +130,7 @@ const Navbar = () => {
         {/* Mobile Menu Trigger */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white focus:outline-none"
+          className="md:hidden p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white focus:outline-none cursor-pointer"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -110,15 +144,16 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#0a0f1d] border-b border-slate-800/90 px-4 pt-3 pb-6"
+            transition={{ duration: 0.25 }}
+            className="md:hidden bg-[#0a0f1d] border-b border-slate-800/90 px-4 pt-3 pb-6 shadow-2xl"
           >
             <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-2.5 text-base font-medium text-slate-300 hover:text-blue-400 hover:bg-slate-900/80 rounded-lg transition-colors"
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className="px-4 py-2.5 text-base font-medium text-slate-300 hover:text-blue-400 hover:bg-slate-900/80 rounded-lg transition-colors cursor-pointer"
                 >
                   {link.name}
                 </a>
@@ -146,8 +181,8 @@ const Navbar = () => {
                 </div>
                 <a
                   href="#contact"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-md shadow-blue-600/30"
+                  onClick={(e) => handleNavClick(e, '#contact')}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-md shadow-blue-600/30 cursor-pointer"
                 >
                   <span>Let's Connect</span>
                   <ArrowUpRight size={16} />
